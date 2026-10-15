@@ -1,5 +1,5 @@
 """
-OrderMitra AI - Root Entry Point
+Orderly AI - Root Entry Point
 Delegates execution to frontend.app
 """
 

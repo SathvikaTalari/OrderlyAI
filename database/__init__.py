@@ -1,5 +1,5 @@
 """
-Database package for OrderMitra AI.
+Database package for Orderly AI.
 Provides SQLite storage, schema initialization, and CRUD operations.
 """
 

@@ -1,5 +1,5 @@
 """
-Order Extraction module for OrderMitra AI.
+Order Extraction module for Orderly AI.
 Formats prompts for Gemma 3, invokes local Ollama, sanitizes and validates JSON,
 and strictly enforces rules against hallucinating missing information.
 Includes an offline fallback extractor for testing when Ollama is unavailable.
@@ -11,7 +11,7 @@ from typing import Dict, List, Any, Tuple, Optional
 from backend.ollama_service import generate_local_completion
 from backend.config import DEFAULT_MODEL, DEFAULT_OLLAMA_URL
 
-SYSTEM_PROMPT = """You are an accurate, strict order information extractor for a local business order management system called OrderMitra AI.
+SYSTEM_PROMPT = """You are an accurate, strict order information extractor for a local business order management system called Orderly AI.
 Your sole job is to extract customer details and ordered items from unstructured messages (like WhatsApp, SMS, or Instagram messages) into valid JSON.
 
 Strict Schema Requirements:

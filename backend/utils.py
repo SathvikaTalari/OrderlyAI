@@ -1,5 +1,5 @@
 """
-Utilities and sample data presets for OrderMitra AI.
+Utilities and sample data presets for Orderly AI.
 Provides realistic sample customer messages (WhatsApp, SMS, Instagram DMs)
 for 1-click testing and formatting helpers.
 """
@@ -23,7 +23,7 @@ Thanks, Rajesh Kumar, 9876543210""",
 Deliver to Tech Park, Tower B reception by 3 PM.
 Name: Sneha Sharma (Ph: 9123456789). Please pack with knife and candles.""",
 
-    "Organic Farm / Veggie Box": """Hello OrderMitra! Order for Anita Desai:
+    "Organic Farm / Veggie Box": """Hello Orderly AI! Order for Anita Desai:
 Organic Spinach - 2 bunches
 Tomatoes - 3 kg @ 40
 Potatoes - 5 kg
@@ -33,6 +33,13 @@ Deliver on Saturday. Call 9845012345 when you reach the gate.""",
 
     "Minimal Message (Missing Details)": """Need 3 packs of green tea and 2 jars of honey urgently.
 Drop at door.""",
+
+    "Wholesale / Distributor": """Good morning! Please send the monthly stock replenishment:
+- Parle-G Biscuits: 10 cartons @ 480/carton
+- Maggi Noodles 70g: 5 cartons @ 960/carton
+- Tata Tea Premium 250g: 50 packets @ 90 each
+- Aashirvaad Salt 1kg: 30 packets @ 22 each
+Payment via UPI. Deliver to Godown No. 3, APMC Yard. Contact: Manoj Wholesale, 9700011223""",
 }
 
 

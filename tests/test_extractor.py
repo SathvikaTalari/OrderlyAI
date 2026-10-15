@@ -1,5 +1,5 @@
 """
-Unit tests for OrderMitra AI Extraction & Prompt Sanitization Module.
+Unit tests for Orderly AI Extraction & Prompt Sanitization Module.
 """
 
 from backend.extractor import (

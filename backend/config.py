@@ -1,5 +1,5 @@
 """
-Configuration module for OrderMitra AI.
+Configuration module for Orderly AI.
 Manages application constants, environment variables, and default settings.
 """
 
@@ -16,8 +16,8 @@ DATABASE_DIR = BASE_DIR / "database"
 DATABASE_DIR.mkdir(parents=True, exist_ok=True)
 
 # App Metadata
-APP_NAME = "OrderMitra AI"
-APP_TAGLINE = "Local-First AI Order Management for Small Businesses"
+APP_NAME = "OrderlyAI"
+APP_TAGLINE = "Smart Orders. Local AI. Greater Control."
 APP_VERSION = "1.0.0"
 
 # Ollama / AI Settings (Strictly local-first)
@@ -26,7 +26,7 @@ DEFAULT_MODEL = os.getenv("OLLAMA_MODEL", "gemma3:4b")
 OLLAMA_TIMEOUT = int(os.getenv("OLLAMA_TIMEOUT", "60"))
 
 # Database Settings (placed inside database/ directory)
-DATABASE_PATH = os.getenv("DATABASE_PATH", str(DATABASE_DIR / "ordermitra.db"))
+DATABASE_PATH = os.getenv("DATABASE_PATH", str(DATABASE_DIR / "orderly.db"))
 
 # Business / UI Settings
 CURRENCY_SYMBOL = os.getenv("APP_CURRENCY", "₹")

@@ -1,8 +1,8 @@
-# 🛍️ OrderMitra AI
+# 🛍️ OrderlyAI
 
-**Local-First AI Order Management Application for Small Businesses**
+**Smart Orders. Local AI. Greater Control.**
 
-OrderMitra AI is an open-source, private, local-first order processing tool built for small businesses (grocery stores, bakeries, cafes, boutique brands, and local merchants). It converts messy, unstructured customer messages from WhatsApp, SMS, and Instagram DMs into structured, itemized orders with editable fields, SQLite persistence, and one-click CSV export—**all running 100% locally with zero cloud API dependencies.**
+OrderlyAI is a local-first AI-powered order management application designed for small businesses (grocery stores, bakeries, cafes, boutique brands, wholesalers, and independent sellers). It converts unstructured customer messages from messaging platforms (WhatsApp, SMS, Instagram DMs) into organized, editable order records with SQLite persistence, status progression, business analytics, and CSV reporting—**all running 100% locally with zero cloud API dependencies.**
 
 ---
 
@@ -49,7 +49,7 @@ OrderlyAI/
 ├── database/                   # Persistent storage layer
 │   ├── __init__.py
 │   ├── db.py                   # SQLite connection, schema, CRUD, search, and Pandas CSV export
-│   └── ordermitra.db           # SQLite database file (created automatically)
+│   └── orderly.db              # SQLite database file (created automatically)
 └── tests/                      # Automated unit test suite
     ├── __init__.py
     ├── test_database.py        # Database schema, CRUD, search, and CSV export tests
@@ -160,7 +160,7 @@ All 14 tests cover:
 ## 🛡️ Privacy & Guardrails
 
 - **No Third-Party APIs**: No data is sent to external cloud APIs (e.g. OpenAI, Anthropic, or external proxies). All inference runs strictly on your machine via local Ollama.
-- **Strict Data Extraction Rules**: If an incoming message says *"Send 2 kg sugar tomorrow"*, OrderMitra records customer name and phone as `Unknown / Blank` rather than guessing or fabricating customer details.
+- **Strict Data Extraction Rules**: If an incoming message says *"Send 2 kg sugar tomorrow"*, Orderly AI records customer name and phone as `Unknown / Blank` rather than guessing or fabricating customer details.
 - **Explicit Confirmation**: Every order requires user review and verification before persisting to SQLite.
 - **Safe Destructive Operations**: Deleting an order displays an alert with two-step confirmation to prevent accidental loss of business records.
 

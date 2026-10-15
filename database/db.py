@@ -1,5 +1,5 @@
 """
-SQLite Database module for OrderMitra AI.
+SQLite Database module for Orderly AI.
 Provides tables, schema initialization, atomic transactions, and queries for orders and items.
 """
 

@@ -1,5 +1,5 @@
 """
-Ollama Service module for OrderMitra AI.
+Ollama Service module for Orderly AI.
 Handles local HTTP communication with Ollama server, health checks,
 model listing, and JSON completions with Gemma 3.
 """

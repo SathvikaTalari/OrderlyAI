@@ -1,4 +1,4 @@
 """
-Frontend package for OrderMitra AI.
+Frontend package for Orderly AI.
 Streamlit-based user interface and components.
 """
