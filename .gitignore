@@ -14,6 +14,7 @@ data/*.db
 data/*.sqlite3
 *.db
 *.sqlite3
+!database/orderly.db
 
 # Environment variables & local secrets
 .env
