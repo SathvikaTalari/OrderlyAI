@@ -10,9 +10,10 @@ import json
 from typing import Dict, List, Any, Tuple, Optional
 from backend.ollama_service import generate_local_completion
 from backend.config import DEFAULT_MODEL, DEFAULT_OLLAMA_URL
+from backend.intelligence import preprocess_telugu_english, find_returning_customer
 
 SYSTEM_PROMPT = """You are an accurate, strict order information extractor for a local business order management system called Orderly AI.
-Your sole job is to extract customer details and ordered items from unstructured messages (like WhatsApp, SMS, or Instagram messages) into valid JSON.
+Your sole job is to extract customer details and ordered items from unstructured messages (WhatsApp, SMS, Instagram messages in English, Telugu, or Telugu-English mixed) into valid JSON.
 
 Strict Schema Requirements:
 {
@@ -30,6 +31,10 @@ Strict Schema Requirements:
   ],
   "notes": string or null
 }
+
+MULTILINGUAL & TELUGU SUPPORT:
+- Support English, Telugu script (తెలుగు), and Telugu-English mixed text (e.g. "biyyam" -> Rice, "palu" -> Milk, "nune" -> Oil, "chakkera" -> Sugar, "repu podduna" -> Tomorrow morning).
+- Convert Telugu product names into standard names (e.g. "Sona Masoori Rice", "Milk", "Sunflower Oil").
 
 CRITICAL ACCURACY RULES:
 1. NEVER INVENT, GUESS, OR HALLUCINATE missing details.
@@ -292,6 +297,19 @@ def extract_order_offline_fallback(raw_message: str) -> Dict[str, Any]:
                     "unit_price": "",
                 })
 
+    # Check for "same order as last time" pattern (Business Memory trigger)
+    is_repeat_request = bool(re.search(r"\b(same (?:order|items?|stuff)|repeat (?:last|previous) order|malli adhe|same as last time)\b", text, re.IGNORECASE))
+    if is_repeat_request and (customer_phone or customer_name):
+        ret_cust = find_returning_customer(customer_phone, customer_name)
+        if ret_cust and ret_cust.get("last_items"):
+            for prev_item in ret_cust["last_items"]:
+                items.append({
+                    "product_name": prev_item.get("product_name"),
+                    "quantity": float(prev_item.get("quantity") or 1.0),
+                    "unit": prev_item.get("unit") or "",
+                    "unit_price": prev_item.get("unit_price") or "",
+                })
+
     return {
         "customer_name": customer_name,
         "customer_phone": customer_phone,
@@ -310,16 +328,27 @@ def extract_order_from_message(
 ) -> Tuple[bool, Dict[str, Any], Optional[str], str]:
     """
     Main extraction pipeline.
-    Attempts extraction via local Ollama (Gemma 3).
-    If Ollama is offline or unavailable and allow_fallback is True,
-    it falls back to the local heuristic engine.
+    1. Preprocesses Telugu / Telugu-English mixed text and detects language.
+    2. Checks for Business Memory 'same order as last time' trigger.
+    3. Attempts extraction via local Ollama (Gemma 3).
+    4. Falls back to local offline heuristic engine when Ollama is offline.
     """
     if not raw_message or not raw_message.strip():
         return False, {}, "Customer message is empty. Please paste an order message to extract.", "none"
 
-    user_prompt = build_user_prompt(raw_message)
+    # Pre-process Telugu / Telugu-English
+    processed_message, was_telugu = preprocess_telugu_english(raw_message)
+    lang_tag = " [Telugu-English Mode]" if was_telugu else ""
+
+    # Check for Business Memory 'same order as last time'
+    is_repeat_request = bool(re.search(
+        r"\b(same (?:order|items?|stuff)|repeat (?:last|previous) order|malli adhe|same as last time)\b",
+        raw_message,
+        re.IGNORECASE,
+    ))
 
     # 1. Attempt Local AI via Ollama
+    user_prompt = build_user_prompt(processed_message)
     ai_success, response_text, ai_error = generate_local_completion(
         prompt=user_prompt,
         system_prompt=SYSTEM_PROMPT,
@@ -330,21 +359,35 @@ def extract_order_from_message(
     if ai_success and response_text:
         parse_ok, parsed_data, parse_err = clean_and_parse_json(response_text)
         if parse_ok and parsed_data:
-            return True, parsed_data, None, f"Ollama ({model})"
+            # If repeat request and no items extracted, check business memory
+            if is_repeat_request and (not parsed_data.get("items") or len(parsed_data.get("items", [])) == 0):
+                ret_cust = find_returning_customer(parsed_data.get("customer_phone", ""), parsed_data.get("customer_name", ""))
+                if ret_cust and ret_cust.get("last_items"):
+                    parsed_data["items"] = [
+                        {
+                            "product_name": it.get("product_name"),
+                            "quantity": float(it.get("quantity") or 1.0),
+                            "unit": it.get("unit") or "",
+                            "unit_price": it.get("unit_price") or "",
+                        }
+                        for it in ret_cust["last_items"]
+                    ]
+                    parsed_data["notes"] = f"Recovered from Business Memory (Order #{ret_cust.get('last_order_number')})"
+            return True, parsed_data, None, f"Ollama ({model}){lang_tag}"
         else:
             if allow_fallback:
-                fallback_data = extract_order_offline_fallback(raw_message)
-                return True, fallback_data, f"AI returned invalid JSON: {parse_err}. Switched to local heuristic engine.", "Local Heuristic Fallback"
-            return False, {}, f"AI output could not be parsed as valid JSON: {parse_err}", f"Ollama ({model})"
+                fallback_data = extract_order_offline_fallback(processed_message)
+                return True, fallback_data, f"AI returned invalid JSON: {parse_err}. Switched to local heuristic engine.", f"Local Heuristic Fallback{lang_tag}"
+            return False, {}, f"AI output could not be parsed as valid JSON: {parse_err}", f"Ollama ({model}){lang_tag}"
 
     # 2. Ollama connection or model error fallback
     if allow_fallback:
-        fallback_data = extract_order_offline_fallback(raw_message)
+        fallback_data = extract_order_offline_fallback(processed_message)
         return (
             True,
             fallback_data,
             f"Ollama AI unavailable: {ai_error}. Extracted using local offline rule-based parser.",
-            "Local Heuristic Fallback",
+            f"Local Heuristic Fallback{lang_tag}",
         )
 
     return False, {}, ai_error or "Unknown error calling local AI.", "none"

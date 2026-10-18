@@ -22,7 +22,8 @@ def get_db_connection(db_path: Optional[str] = None) -> sqlite3.Connection:
 
 def init_db(db_path: Optional[str] = None) -> None:
     """Initializes SQLite tables and indexes if they do not exist."""
-    conn = get_db_connection(db_path)
+    target_path = db_path or DATABASE_PATH
+    conn = get_db_connection(target_path)
     try:
         cursor = conn.cursor()
 
@@ -68,7 +69,35 @@ def init_db(db_path: Optional[str] = None) -> None:
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id);")
 
+        # Products / Inventory Catalog Table
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS products (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                category TEXT DEFAULT 'General',
+                unit TEXT DEFAULT 'pcs',
+                unit_price REAL,
+                min_price REAL,
+                max_price REAL,
+                stock_quantity REAL DEFAULT 0.0,
+                low_stock_threshold REAL DEFAULT 5.0,
+                is_active INTEGER DEFAULT 1,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+            """
+        )
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_products_name ON products(name);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);")
+
         conn.commit()
+
+        # Check if products catalog needs initial seeding
+        cursor.execute("SELECT COUNT(*) FROM products;")
+        if cursor.fetchone()[0] == 0:
+            from backend.catalog import seed_demo_catalog
+            seed_demo_catalog(target_path)
     finally:
         conn.close()
 

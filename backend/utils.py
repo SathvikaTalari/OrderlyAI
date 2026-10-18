@@ -40,6 +40,24 @@ Drop at door.""",
 - Tata Tea Premium 250g: 50 packets @ 90 each
 - Aashirvaad Salt 1kg: 30 packets @ 22 each
 Payment via UPI. Deliver to Godown No. 3, APMC Yard. Contact: Manoj Wholesale, 9700011223""",
+
+    "Telugu-English Mixed (Kirana)": """Namaste anna, Flat 301 Sri Sai Residency ki repu podduna 9 AM kalla pampandi:
+- 2 packets Vijaya milk @ 32
+- 5 kg Sona Masoori biyyam @ 65
+- 1 kg Aashirvaad godhuma pindi @ 45
+- 2 kg chakkera @ 42
+- 1 liter Freedom sunflower nune @ 135
+Urgent ga kavali. Rajesh Kumar, Ph: 9876543210""",
+
+    "Returning Customer (Memory)": """Hi bhaiya, same order as last time pampandi please.
+Deliver tomorrow morning to Flat 402, Sunshine Heights.
+Rajesh Kumar, Phone: 9876543210""",
+
+    "Telugu Script (తెలుగు ఆర్డర్)": """నమస్కారం, మా ఇంటికి రేపు ఉదయం 10 గంటలకు పంపండి:
+- 5 కిలోల బియ్యం @ 65
+- 2 ప్యాకెట్లు పాలు @ 32
+- 1 కిలో కందిపప్పు @ 160
+పేరు: రమేష్, ఫోన్: 9988776655. అడ్రస్: రోడ్ నెం 4, బంజారా హిల్స్.""",
 }
 
 

@@ -1,0 +1,13 @@
+Customer Purchase Order
+Customer Name: Arvind Swaminathan
+Contact Phone: 9940123456
+Delivery Date: Monday 4 PM
+Delivery Address: Flat 504, Green Glen Apartments, Outer Ring Road
+
+Items Requested:
+- 10 kg Basmati Rice @ 110/kg
+- 3 liters Cold Pressed Groundnut Oil @ 210/liter
+- 2 kg Toor Dal @ 165/kg
+- 500 g Ghee @ 360
+
+Special Instructions: Leave at security desk if door bell is not answered.
